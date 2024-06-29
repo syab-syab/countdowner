@@ -10,7 +10,9 @@ const Wrapper = styled.header`
   padding: 1.5rem 0;
 `
 
-const Title = styled.p`
+const Title = styled.a`
+  color: black;
+  text-decoration: none;
   font-size: 3rem;
   font-weight: bold;
   padding: 0;
@@ -20,7 +22,7 @@ const Title = styled.p`
 const Header = () => {
   return (
     <Wrapper>
-      <Title>
+      <Title href='https://homemade-apps.vercel.app/' target='_blank'>
         カウントダウナー
       </Title>
     </Wrapper>

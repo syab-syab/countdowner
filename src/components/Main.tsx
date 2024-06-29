@@ -129,17 +129,17 @@ const Main = () => {
   }
 
   // requireを付ける必要があるらしい
-  const countSound = new Audio(require("../sound/pi.mp3"))
-  const timeupSound = new Audio(require("../sound/timeup.mp3"))
+  const countSound: HTMLAudioElement = new Audio(require("../sound/pi.mp3"))
+  const timeupSound: HTMLAudioElement = new Audio(require("../sound/timeup.mp3"))
 
   useEffect(() => {
     // セットアップ処理
     const countdown = setInterval(() => {
-      if(start && !timeup && countNum > 1) {
+      if(start && !timeup && countNum > 0) {
         // countSound.pause()
         setCountNum(countNum-1)
         countSound.play()
-      } else if (countNum === 1) {
+      } else if (countNum === 0) {
         // timeupSound.pause()
         setTimeUp(true)
         timeupSound.play()
