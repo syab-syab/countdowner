@@ -11,9 +11,37 @@ const backgroundStyle: string = `
 
 const Wrapper = styled.main`
   ${backgroundStyle}
-  padding: 5rem;
-  height: 90vh;
   font-size: 3rem;
+  padding: 5rem 40rem;
+  height: 90vh;
+  @media (max-width: 1100px) {
+    padding: 5rem 30rem;
+  }
+  @media (max-width: 1000px) {
+    padding: 5rem 25rem;
+  }
+  @media (max-width: 900px) {
+    padding: 5rem 20rem;
+  }
+  @media (max-width: 800px) {
+    padding: 5rem 15rem;
+  }
+  @media (max-width: 700px) {
+    padding: 5rem 10rem;
+  }
+  @media (max-width: 600px) {
+    padding: 5rem;
+  }
+`
+
+
+const SoundBtn = styled.div<{$isSound: boolean}>`
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+  background: ${(props) => props.$isSound ? "#FFBBF6" : "#191919"};
+  color: ${(props) => props.$isSound ? "black" : "white"};
+  font-size: 2.5rem;
+  border: 0.1rem black solid;
 `
 
 const CountNumber = styled.p`
@@ -87,12 +115,15 @@ const UsefulBtn = styled.div`
   padding: 1rem 0;
 `
 
+
 const Main = () => {
   const [countNum, setCountNum] = useState<number>(10)
 
   const [start, setStart] = useState<boolean>(false)
 
   const [timeup, setTimeUp] = useState<boolean>(false)
+
+  const [isSound, setIsSound] = useState<boolean>(false)
 
   const addCountNum = (): void => {
     if(!start && countNum < 999){
@@ -128,6 +159,13 @@ const Main = () => {
     setStart(!start)
   }
 
+  const toggleIsSound = ():void => {
+      if(!start) {
+        setIsSound(!isSound)
+      }
+  }
+
+
   // requireを付ける必要があるらしい
   const countSound: HTMLAudioElement = new Audio(require("../sound/pi.mp3"))
   const timeupSound: HTMLAudioElement = new Audio(require("../sound/timeup.mp3"))
@@ -138,21 +176,25 @@ const Main = () => {
       if(start && !timeup && countNum > 0) {
         // countSound.pause()
         setCountNum(countNum-1)
-        countSound.play()
+        isSound && countSound.play()
       } else if (countNum === 0) {
         // timeupSound.pause()
         setTimeUp(true)
-        timeupSound.play()
+        isSound && timeupSound.play()
       }
     }, 1000)
 
     // クリーンアップ処理
     // return無しだと挙動がおかしくなるから必要
     return () => clearInterval(countdown)
-  }, [start, timeup, countNum, countSound])
+  }, [start, timeup, countNum, countSound, timeupSound])
 
   return (
     <Wrapper>
+        <SoundBtn $isSound={isSound} onClick={toggleIsSound}>
+          サウンド{isSound ? "有" : "無"}
+        </SoundBtn>        
+
       {!timeup ?
         <>
           <CountNumber>
