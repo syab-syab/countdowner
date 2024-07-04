@@ -3,7 +3,6 @@ import styled, { keyframes } from 'styled-components'
 import { useState, useEffect } from 'react'
 
 
-// 休日と平日でスタイルと文を少し変える
 const backgroundStyle: string = `
   background-image: linear-gradient(90deg, rgba(251, 253, 191, 1), rgba(226, 207, 255, 1));
 `
@@ -13,7 +12,7 @@ const Wrapper = styled.main`
   ${backgroundStyle}
   font-size: 3rem;
   padding: 5rem 40rem;
-  height: 90vh;
+  height: 120vh;
   @media (max-width: 1100px) {
     padding: 5rem 30rem;
   }
@@ -34,6 +33,9 @@ const Wrapper = styled.main`
   }
 `
 
+const SoundBtnWrapper = styled.div`
+  display: flex;
+`
 
 const SoundBtn = styled.div<{$isSound: boolean}>`
   margin-bottom: 2rem;
@@ -42,6 +44,7 @@ const SoundBtn = styled.div<{$isSound: boolean}>`
   color: ${(props) => props.$isSound ? "black" : "white"};
   font-size: 2.5rem;
   border: 0.1rem black solid;
+  flex-grow: 1;
 `
 
 const CountNumber = styled.p`
@@ -123,7 +126,9 @@ const Main = () => {
 
   const [timeup, setTimeUp] = useState<boolean>(false)
 
-  const [isSound, setIsSound] = useState<boolean>(false)
+  const [isClickSound, setIsClickSound] = useState<boolean>(false)
+
+  const [isFinishSound, setIsFinishSound] = useState<boolean>(false)
 
   const addCountNum = (): void => {
     if(!start && countNum < 999){
@@ -159,11 +164,17 @@ const Main = () => {
     setStart(!start)
   }
 
-  const toggleIsSound = ():void => {
+  const toggleIsClickSound = ():void => {
       if(!start) {
-        setIsSound(!isSound)
+        setIsClickSound(!isClickSound)
       }
   }
+
+  const toggleIsFinishSound = ():void => {
+    if(!start) {
+      setIsFinishSound(!isFinishSound)
+    }
+}
 
 
   // requireを付ける必要があるらしい
@@ -176,11 +187,12 @@ const Main = () => {
       if(start && !timeup && countNum > 0) {
         // countSound.pause()
         setCountNum(countNum-1)
-        isSound && countSound.play()
+        isClickSound && countSound.play()
       } else if (countNum === 0) {
         // timeupSound.pause()
         setTimeUp(true)
-        isSound && timeupSound.play()
+        isFinishSound && timeupSound.play()
+        // timeupSound.play()
       }
     }, 1000)
 
@@ -191,9 +203,15 @@ const Main = () => {
 
   return (
     <Wrapper>
-        <SoundBtn $isSound={isSound} onClick={toggleIsSound}>
-          サウンド{isSound ? "有" : "無"}
-        </SoundBtn>        
+      <SoundBtnWrapper>
+        <SoundBtn $isSound={isClickSound} onClick={toggleIsClickSound}>
+          クリック音
+        </SoundBtn>
+        <SoundBtn $isSound={isFinishSound} onClick={toggleIsFinishSound}>
+          終了音
+        </SoundBtn> 
+      </SoundBtnWrapper>
+
 
       {!timeup ?
         <>
